@@ -17,7 +17,6 @@ export const MediaPlayer = ({ setDuration }) => {
       <div className="max-w-[350px] h-[100%] flex-1 flex flex-col items-center pt-[40px]">
         <audio
           ref={currentRef}
-          // src="https://files.topmediai.com/aimusic/api/6cb43343-a1ec-4479-aa4b-411c3db4db24-audio.mp3"
           hidden
           autoPlay
           loop

@@ -2,7 +2,7 @@ import React from "react";
 
 const ProgressBar = ({ currentTime, duration, onSeek }) => {
 
-    console.log("updated currentTime ",currentTime,duration);
+    // console.log("updated currentTime ",currentTime,duration);
     
     if(!isFinite(duration) || duration === 0)
     {

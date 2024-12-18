@@ -17,6 +17,7 @@ export const BottomBar = ({ duration, setDuration }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   //  const [qualityList,setQualityList] = useState([]);
+
   // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,17 +31,16 @@ export const BottomBar = ({ duration, setDuration }) => {
 
   useEffect(() => {
     const isHLS = currentUrl.includes("m3u8");
-    
-    
+
     if (isHLS) {
       if (Hls.isSupported()) {
+        console.log("Playing with hsl");
+
         const hls = new Hls();
         hls.loadSource(currentUrl);
         hls.attachMedia(currentRef.current);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-
-          console.log("Manifest loaded");
           currentRef.current
             .play()
             .then(() => {
@@ -61,14 +61,20 @@ export const BottomBar = ({ duration, setDuration }) => {
         currentRef.current.addEventListener("loadedmetadata", () => {
           console.log("Loaded meta data !!!!!!!");
           setDuration(currentRef.current.duration);
+
           currentRef.current.play();
+          setIsPlaying(true);
         });
       }
     } else {
       if (currentRef.current) {
+        console.log("Playing without hsl");
         currentRef.current.src = currentUrl; // Dynamically set the audio src
-        console.log("current --  seted",currentUrl);
-
+        currentRef.current.play().then(()=>{
+          setIsPlaying(true);
+        }).catch((e)=>{
+          setIsPlaying(false);
+        })
       }
     }
   }, [currentUrl]);
@@ -107,8 +113,6 @@ export const BottomBar = ({ duration, setDuration }) => {
       currentRef.current.currentTime = newTime;
     }
   };
-
- 
 
   return (
     <div className="h-[74px] w-screen bg-black fixed bottom-0 flex flex-col">
@@ -162,25 +166,24 @@ export const BottomBar = ({ duration, setDuration }) => {
 
 export default BottomBar;
 
+// async function getResolutionsFromM3U8(url) {
+//   console.log("URL,", url);
+//   try {
+//     // Fetch the m3u8 file content
+//     const response = await fetch(url);
+//     const data = await response.text();
 
- // async function getResolutionsFromM3U8(url) {
-  //   console.log("URL,", url);
-  //   try {
-  //     // Fetch the m3u8 file content
-  //     const response = await fetch(url);
-  //     const data = await response.text();
+//     // Match all lines containing RESOLUTION=<width>x<height>
+//     const resolutions = [
+//       ...new Set(
+//         data.match(/RESOLUTION=([\d+x]+)/g)?.map((res) => res.split("=")[1])
+//       ),
+//     ];
 
-  //     // Match all lines containing RESOLUTION=<width>x<height>
-  //     const resolutions = [
-  //       ...new Set(
-  //         data.match(/RESOLUTION=([\d+x]+)/g)?.map((res) => res.split("=")[1])
-  //       ),
-  //     ];
-
-  //     // Log or return the resolutions
-  //     console.log("Resolutions ...", resolutions);
-  //     return resolutions;
-  //   } catch (error) {
-  //     console.error("Error fetching the M3U8 file:", error);
-  //   }
-  // }
+//     // Log or return the resolutions
+//     console.log("Resolutions ...", resolutions);
+//     return resolutions;
+//   } catch (error) {
+//     console.error("Error fetching the M3U8 file:", error);
+//   }
+// }
