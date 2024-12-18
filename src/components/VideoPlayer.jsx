@@ -15,6 +15,7 @@ const VideoPlayer = ({ setDuration }) => {
     >
       <video
         className="w-full h-full object-contain"
+        controls
         ref={currentRef}
          onLoadedMetadata={()=>{
           if (currentRef) {

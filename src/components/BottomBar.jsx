@@ -11,14 +11,12 @@ import ProgressBar from "./ProgressBar"; // Import ProgressBar Component
 import { MyContext } from "../App";
 import SettingComponent from "./SettingComponent";
 
-export const BottomBar = ({ duration, setDuration }) => {
+export const BottomBar = ({ duration, setDuration, isHLS }) => {
   const { currentRef, currentUrl } = useContext(MyContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  //  const [qualityList,setQualityList] = useState([]);
 
-  // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentRef.current && !currentRef.current.paused) {
@@ -30,12 +28,8 @@ export const BottomBar = ({ duration, setDuration }) => {
   }, []);
 
   useEffect(() => {
-    const isHLS = currentUrl.includes("m3u8");
-
     if (isHLS) {
       if (Hls.isSupported()) {
-        console.log("Playing with hsl");
-
         const hls = new Hls();
         hls.loadSource(currentUrl);
         hls.attachMedia(currentRef.current);
@@ -59,7 +53,6 @@ export const BottomBar = ({ duration, setDuration }) => {
         // For Safari browsers
         currentRef.current.src = currentUrl;
         currentRef.current.addEventListener("loadedmetadata", () => {
-          console.log("Loaded meta data !!!!!!!");
           setDuration(currentRef.current.duration);
 
           currentRef.current.play();
@@ -68,13 +61,15 @@ export const BottomBar = ({ duration, setDuration }) => {
       }
     } else {
       if (currentRef.current) {
-        console.log("Playing without hsl");
         currentRef.current.src = currentUrl; // Dynamically set the audio src
-        currentRef.current.play().then(()=>{
-          setIsPlaying(true);
-        }).catch((e)=>{
-          setIsPlaying(false);
-        })
+        currentRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((e) => {
+            setIsPlaying(false);
+          });
       }
     }
   }, [currentUrl]);

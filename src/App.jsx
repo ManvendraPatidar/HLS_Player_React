@@ -11,7 +11,6 @@ function App() {
   const [currentUrl , setCurrentUrl] = useState("");
   const [currentFile, setCurrentFile] = useState(null);
   const [isLocalFile , setIsLocalFile] = useState(false);
-  const [isAudio , setIsAudio] = useState(true);
   const currentRef  = useRef(null);
   return (
     <>
