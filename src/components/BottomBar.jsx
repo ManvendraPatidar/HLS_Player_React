@@ -28,6 +28,28 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
   }, []);
 
   useEffect(() => {
+    // Function to handle keydown event
+    const handleKeyDown = (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        playPauseHandle();
+      } else if (event.key === "ArrowRight") {
+        seekMedia_10sec(10, true);
+      } else if (event.key === "ArrowLeft") {
+        seekMedia_10sec(10, false);
+      }
+    };
+
+    // Add the event listener when the component mounts`
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     if (isHLS) {
       if (Hls.isSupported()) {
         const hls = new Hls();

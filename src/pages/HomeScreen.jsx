@@ -4,7 +4,7 @@ import { MediaPlayer } from "../components/MediaPlayer.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
 import { useParams } from "react-router-dom";
 import { MyContext } from "../App.jsx";
-import { checkIsHSL } from "../services/checkIsHLS.js";
+
 import { checkHLSFileTypeByCodec } from "../services/checkHLSFileType.js";
 import { LoginScreen } from "./LoginScreen.jsx";
 
