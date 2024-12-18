@@ -4,10 +4,9 @@ import EquizerIcon from "../assets/equalizer.svg";
 import PlayIcon from "../assets/play.svg";
 import PauseIcon from "../assets/pause.svg";
 import FastForward from "../assets/fast_forward.svg";
-import CloseIcon from "../assets/close.svg";
 import Hls from "hls.js";
 import MusixGIF from "../assets/music_bar.gif";
-import ProgressBar from "./ProgressBar"; // Import ProgressBar Component
+import ProgressBar from "./ProgressBar";
 import { MyContext } from "../App";
 import SettingComponent from "./SettingComponent";
 
@@ -16,38 +15,6 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (currentRef.current && !currentRef.current.paused) {
-        setCurrentTime(currentRef.current.currentTime);
-      }
-    }, 10);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    // Function to handle keydown event
-    const handleKeyDown = (event) => {
-      if (event.code === "Space") {
-        event.preventDefault();
-        playPauseHandle();
-      } else if (event.key === "ArrowRight") {
-        seekMedia_10sec(10, true);
-      } else if (event.key === "ArrowLeft") {
-        seekMedia_10sec(10, false);
-      }
-    };
-
-    // Add the event listener when the component mounts`
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   useEffect(() => {
     if (isHLS) {
@@ -83,7 +50,7 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
       }
     } else {
       if (currentRef.current) {
-        currentRef.current.src = currentUrl; // Dynamically set the audio src
+        currentRef.current.src = currentUrl;
         currentRef.current
           .play()
           .then(() => {
@@ -95,6 +62,35 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
       }
     }
   }, [currentUrl]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        playPauseHandle();
+      } else if (event.key === "ArrowRight") {
+        seekMedia_10sec(10, true);
+      } else if (event.key === "ArrowLeft") {
+        seekMedia_10sec(10, false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (currentRef.current && !currentRef.current.paused) {
+        setCurrentTime(currentRef.current.currentTime);
+      }
+    }, 10);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const playPauseHandle = () => {
     if (currentRef.current) {
@@ -108,20 +104,18 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
     }
   };
 
-  // Seek media by 10 seconds
   const seekMedia_10sec = (time, isForward) => {
     if (currentRef.current) {
       if (isForward) {
-        currentRef.current.currentTime += time; // Adjust currentTime by time in seconds
+        currentRef.current.currentTime += time;
         setCurrentTime(currentRef.current.currentTime);
       } else {
-        currentRef.current.currentTime -= time; // Adjust currentTime by time in seconds
+        currentRef.current.currentTime -= time;
         setCurrentTime(currentRef.current.currentTime);
       }
     }
   };
 
-  // Seek media based on range input
   const seekMedia = (event) => {
     console.log("triggerd seekssss");
     const newTime = event.target.value;
@@ -133,8 +127,6 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
 
   return (
     <div className="h-[74px] w-screen bg-black fixed bottom-0 flex flex-col">
-      {/* Progress Bar */}
-
       <ProgressBar
         currentTime={currentTime}
         duration={duration}
@@ -153,7 +145,6 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
         </div>
 
         <div className="flex justify-evenly w-[180px]">
-          {/* Previous and Next Song Icons can be added here */}
           <Icon
             iconPath={FastForward}
             style={{ transform: "scaleX(-1)" }}
@@ -174,7 +165,6 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
             }}
           />
           <SettingComponent />
-          {/* <Icon iconPath={CloseIcon} /> */}
         </div>
       </div>
     </div>
@@ -182,25 +172,3 @@ export const BottomBar = ({ duration, setDuration, isHLS }) => {
 };
 
 export default BottomBar;
-
-// async function getResolutionsFromM3U8(url) {
-//   console.log("URL,", url);
-//   try {
-//     // Fetch the m3u8 file content
-//     const response = await fetch(url);
-//     const data = await response.text();
-
-//     // Match all lines containing RESOLUTION=<width>x<height>
-//     const resolutions = [
-//       ...new Set(
-//         data.match(/RESOLUTION=([\d+x]+)/g)?.map((res) => res.split("=")[1])
-//       ),
-//     ];
-
-//     // Log or return the resolutions
-//     console.log("Resolutions ...", resolutions);
-//     return resolutions;
-//   } catch (error) {
-//     console.error("Error fetching the M3U8 file:", error);
-//   }
-// }

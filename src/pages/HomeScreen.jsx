@@ -2,20 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { BottomBar } from "../components/BottomBar.jsx";
 import { MediaPlayer } from "../components/MediaPlayer.jsx";
 import VideoPlayer from "../components/VideoPlayer.jsx";
-import { useParams } from "react-router-dom";
 import { MyContext } from "../App.jsx";
 
 import { checkHLSFileTypeByCodec } from "../services/checkHLSFileType.js";
-import { LoginScreen } from "./LoginScreen.jsx";
 
 export const HomeScreen = () => {
-  const { isLocalFile, currentRef, currentUrl, setCurrentUrl } =
-    useContext(MyContext);
-
-  const fetchDataFromLocalDatabase = () => {
-    const url = JSON.parse(localStorage.getItem("url")) ?? null;
-    return url;
-  };
+  const { setCurrentUrl } = useContext(MyContext);
 
   let isHLS = fetchDataFromLocalDatabase().includes("m3u8");
 
@@ -28,8 +20,12 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     const url = fetchDataFromLocalDatabase();
-    setCurrentUrl(url);
 
+    if (!url) {
+      console.log("Go back from here ");
+    }
+
+    setCurrentUrl(url);
     isHLS = url.includes("m3u8");
 
     if (url.includes("m3u8")) {
@@ -45,6 +41,8 @@ export const HomeScreen = () => {
     }
   }, []);
 
+
+
   return (
     <div
       className=" h-screen w-screen flex flex-1 overflow-scroll"
@@ -58,4 +56,10 @@ export const HomeScreen = () => {
       <BottomBar duration={duration} setDuration={setDuration} isHLS={isHLS} />
     </div>
   );
+};
+
+
+export const fetchDataFromLocalDatabase = () => {
+  const url = JSON.parse(localStorage.getItem("url")) ?? null;
+  return url;
 };

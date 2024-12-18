@@ -4,8 +4,8 @@ import { MyContext } from "../App";
 const SettingComponent = () => {
   const { currentRef } = useContext(MyContext);
 
-  const [isOpen, setIsOpen] = useState(false); // State to toggle modal visibility
-  const [speed, setSpeed] = useState(1); // Playback speed state
+  const [isOpen, setIsOpen] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -31,7 +31,7 @@ const SettingComponent = () => {
       {isOpen && (
         <div
           className="absolute top-[-100px] right-[45px] sm:right-[135px]  w-48 bg-white shadow-lg rounded-[20px] rounded-br-none p-4 z-50 border-2 border-solid border-[orange]"
-          style={{ zIndex: 9999 }} // Ensure the modal appears above everything else
+          style={{ zIndex: 9999 }}
         >
           <div className="text-lg font-semibold">Settings</div>
           <div className="mt-4">

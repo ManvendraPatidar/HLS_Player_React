@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef } from "react";
-import Hls from "hls.js";
+import React, { useContext} from "react";
 import { MyContext } from "../App";
 
 const VideoPlayer = ({ setDuration }) => {
-  const { currentRef, currentUrl } = useContext(MyContext);
+  const { currentRef } = useContext(MyContext);
 
   return (
     <div

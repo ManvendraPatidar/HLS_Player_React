@@ -9,8 +9,7 @@ const DragAndDropBox = () => {
 
   // Handle files dropped into the dropzone
   const onDrop = (acceptedFiles) => {
-
-    console.log("Helllo droped")
+    console.log("Helllo droped");
     if (acceptedFiles.length > 0) {
       setCurrentFile(acceptedFiles[0]);
       setIsLocalFile(true);
@@ -21,12 +20,11 @@ const DragAndDropBox = () => {
   // Create a dropzone using the useDropzone hook
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: ".m3u8, .mp3, .mp4 ", // Customize file types here
+    accept: ".m3u8, .mp3, .mp4 ",
   });
 
   return (
     <div className="flex justify-center items-center scrollbar-none flex-col h-[180px] max-w-[300px] rounded-[30px] mx-auto my-[10px]">
-      {/* Dotted Border Box */}
       <div
         {...getRootProps()}
         className="w-[300px] h-[180px] border-[2px] overflow-auto scrollbar-none border-dashed rounded-[20px] border-gray-400 flex justify-center  items-center p-4 "
